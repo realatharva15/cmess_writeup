@@ -24,71 +24,71 @@ lets start enumerating the webpage at port 80. lets carry out a directory fuzz u
 ```bash
 gobuster dir -u http://cmess.thm -w /usr/share/wordlists/dirb/common.txt
 ```
-/.hta                 (Status: 403) [Size: 274]
+`/.hta                 (Status: 403) [Size: 274]`
 
-/.htpasswd            (Status: 403) [Size: 274]
+`/.htpasswd            (Status: 403) [Size: 274]`
 
-/.htaccess            (Status: 403) [Size: 274]
+`/.htaccess            (Status: 403) [Size: 274]`
 
-/0                    (Status: 200) [Size: 3851]
+`/0                    (Status: 200) [Size: 3851]`
 
-/01                   (Status: 200) [Size: 4078]
+`/01                   (Status: 200) [Size: 4078]`
 
-/1                    (Status: 200) [Size: 4078]
+`/1                    (Status: 200) [Size: 4078]`
 
-/1x1                  (Status: 200) [Size: 4078]
+`/1x1                  (Status: 200) [Size: 4078]`
 
-/about                (Status: 200) [Size: 3353]
+`/about                (Status: 200) [Size: 3353]`
 
-/About                (Status: 200) [Size: 3339]
+`/About                (Status: 200) [Size: 3339]`
 
-/admin                (Status: 200) [Size: 1580]
+`/admin                (Status: 200) [Size: 1580]`
 
-/api                  (Status: 200) [Size: 0]
+`/api                  (Status: 200) [Size: 0]`
 
-/assets               (Status: 301) [Size: 318] [--> http://cmess.thm/assets/?url=assets]
+`/assets               (Status: 301) [Size: 318] [--> http://cmess.thm/assets/?url=assets]`
 
-/author               (Status: 200) [Size: 3590]
+`/author               (Status: 200) [Size: 3590]`
 
-/blog                 (Status: 200) [Size: 3851]
+`/blog                 (Status: 200) [Size: 3851]`
 
-/category             (Status: 200) [Size: 3862]
+`/category             (Status: 200) [Size: 3862]`
 
-/cm                   (Status: 500) [Size: 0]
+`/cm                   (Status: 500) [Size: 0]`
 
-/feed                 (Status: 200) [Size: 735]
+`/feed                 (Status: 200) [Size: 735]`
 
-/fm                   (Status: 200) [Size: 0]
+`/fm                   (Status: 200) [Size: 0]`
 
-/index                (Status: 200) [Size: 3851]
+`/index                (Status: 200) [Size: 3851]`
 
-/Index                (Status: 200) [Size: 3851]
+`/Index                (Status: 200) [Size: 3851]`
 
-/lib                  (Status: 301) [Size: 312] [--> http://cmess.thm/lib/?url=lib]
+`/lib                  (Status: 301) [Size: 312] [--> http://cmess.thm/lib/?url=lib]`
 
-/log                  (Status: 301) [Size: 312] [--> http://cmess.thm/log/?url=log]
+`/log                  (Status: 301) [Size: 312] [--> http://cmess.thm/log/?url=log]`
 
-/login                (Status: 200) [Size: 1580]
+`/login                (Status: 200) [Size: 1580]`
 
-/robots.txt           (Status: 200) [Size: 65]
+`/robots.txt           (Status: 200) [Size: 65]`
 
-/search               (Status: 200) [Size: 3851]
+`/search               (Status: 200) [Size: 3851]`
 
-/Search               (Status: 200) [Size: 3851]
+`/Search               (Status: 200) [Size: 3851]`
 
-/server-status        (Status: 403) [Size: 274]
+`/server-status        (Status: 403) [Size: 274]`
 
-/sites                (Status: 301) [Size: 316] [--> http://cmess.thm/sites/?url=sites]
+`/sites                (Status: 301) [Size: 316] [--> http://cmess.thm/sites/?url=sites]`
 
-/src                  (Status: 301) [Size: 312] [--> http://cmess.thm/src/?url=src]
+`/src                  (Status: 301) [Size: 312] [--> http://cmess.thm/src/?url=src]`
 
-/tags                 (Status: 200) [Size: 3139]
+`/tags                 (Status: 200) [Size: 3139]`
 
-/tag                  (Status: 200) [Size: 3874]
+`/tag                  (Status: 200) [Size: 3874]`
 
-/themes               (Status: 301) [Size: 318] [--> http://cmess.thm/themes/?url=themes]
+`/themes               (Status: 301) [Size: 318] [--> http://cmess.thm/themes/?url=themes]`
 
-/tmp                  (Status: 301) [Size: 312]
+`/tmp                  (Status: 301) [Size: 312]`
 
 the only useful directory to us is the /admin directory as it has a login page.
 following the hint given to us by the creator of this ctf, we will enumerate the subdomains(vhosts). for that we will have to find whats common in the false responses. as you can see below, each response has different response sizes but the words are common. 
