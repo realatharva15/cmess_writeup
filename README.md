@@ -116,7 +116,7 @@ now we find a small conversation between a user and the support staff. we get th
 lets enter the credentials and find our attack vector to get an initial foothold. 
 
 after doing some reserch, i found out that this version (1.10.9) of Gila CMS is vulnerable to RCE. i read some python scripts on exploitdb and github and found out the way to manually exploit the system.
-inorder to get RCE, we will have to upload a malicious file with a .php7 extension in the /tmp folder via the File-Manager tab. we are uploading it to the /tmp folder.
+inorder to get RCE, we will have to upload a malicious file with a .php7 extension in the /tmp folder via the File-Manager tab. 
 
 first navigate to the File Manager tab
 
