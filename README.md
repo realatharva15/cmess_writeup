@@ -111,9 +111,7 @@ echo "<target_ip> dev.cmess.thm" | sudo tee -a /etc/hosts
 ```
 now we find a small conversation between a user and the support staff. we get the credentials of the user who has access to the admin panel at http://cmess.thm/admin. 
 
-![dev](https://github.com/realatharva15/cmess_writeup/blob/main/images/devE.png)
-
-lets enter the credentials and find our attack vector to get an initial foothold. 
+![dev](https://github.com/realatharva15/cmess_writeup/blob/main/images/devE.png) lets enter the credentials and find our attack vector to get an initial foothold. 
 
 ![admin](https://github.com/realatharva15/cmess_writeup/blob/main/images/admin_dashboard.png)
 
