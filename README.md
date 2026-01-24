@@ -25,39 +25,72 @@ lets start enumerating the webpage at port 80. lets carry out a directory fuzz u
 gobuster dir -u http://cmess.thm -w /usr/share/wordlists/dirb/common.txt
 ```
 /.hta                 (Status: 403) [Size: 274]
+
 /.htpasswd            (Status: 403) [Size: 274]
+
 /.htaccess            (Status: 403) [Size: 274]
+
 /0                    (Status: 200) [Size: 3851]
+
 /01                   (Status: 200) [Size: 4078]
+
 /1                    (Status: 200) [Size: 4078]
+
 /1x1                  (Status: 200) [Size: 4078]
+
 /about                (Status: 200) [Size: 3353]
+
 /About                (Status: 200) [Size: 3339]
+
 /admin                (Status: 200) [Size: 1580]
+
 /api                  (Status: 200) [Size: 0]
+
 /assets               (Status: 301) [Size: 318] [--> http://cmess.thm/assets/?url=assets]
+
 /author               (Status: 200) [Size: 3590]
+
 /blog                 (Status: 200) [Size: 3851]
+
 /category             (Status: 200) [Size: 3862]
+
 /cm                   (Status: 500) [Size: 0]
+
 /feed                 (Status: 200) [Size: 735]
+
 /fm                   (Status: 200) [Size: 0]
+
 /index                (Status: 200) [Size: 3851]
+
 /Index                (Status: 200) [Size: 3851]
+
 /lib                  (Status: 301) [Size: 312] [--> http://cmess.thm/lib/?url=lib]
+
 /log                  (Status: 301) [Size: 312] [--> http://cmess.thm/log/?url=log]
+
 /login                (Status: 200) [Size: 1580]
+
 /robots.txt           (Status: 200) [Size: 65]
+
 /search               (Status: 200) [Size: 3851]
+
 /Search               (Status: 200) [Size: 3851]
+
 /server-status        (Status: 403) [Size: 274]
+
 /sites                (Status: 301) [Size: 316] [--> http://cmess.thm/sites/?url=sites]
+
 /src                  (Status: 301) [Size: 312] [--> http://cmess.thm/src/?url=src]
+
 /tags                 (Status: 200) [Size: 3139]
+
 /tag                  (Status: 200) [Size: 3874]
+
 /themes               (Status: 301) [Size: 318] [--> http://cmess.thm/themes/?url=themes]
+
 /tmp                  (Status: 301) [Size: 312]
 
+the only useful directory to us is the /admin directory as it has a login page.
 following the hint given to us by the creator of this ctf, we will enumerate the subdomains(vhosts). for that we will have to find whats common in the false responses. as you can see below, each response has different response sizes but the words are common. so we will use the amount of words as out filtering standard. any response which contains exactly 522 words shall be omitted.
 
 ```bash
@@ -73,7 +106,7 @@ now we find a small conversation between a user and the support staff. we get th
 
 after doing some reserch, i found out that this version (1.10.9) of Gila CMS is vulnerable to RCE. i read some python scripts on exploitdb and github and found out the way to manually exploit the system.
 
-inorder to get RCE, we will have to upload a malicious file with a .php7 extension in the /tmp folder via the File-Manager tab. 
+inorder to get RCE, we will have to upload a malicious file with a .php7 extension in the /tmp folder via the File-Manager tab. we are uploading it to the /tmp folder.
 
 first navigate to the File Manager tab, and then create a file. name it shell.php7
 
