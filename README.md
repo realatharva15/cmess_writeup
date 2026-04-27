@@ -8,7 +8,7 @@
 first lets add the hostname cmess.thm to our /etc/hosts file.
 
 ```bash
-echo "<target_ip> cmess.thm"
+echo "<target_ip> cmess.thm | sudo tee -a /etc/hosts"
 ```
 nmap scan:
 
